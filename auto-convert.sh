@@ -7,7 +7,7 @@ set -e
 
 # Default settings
 KEEP_TEMP=false
-CURSOR_API_URL="https://www.cursor.com/api/download?platform=linux-x64&releaseTrack=stable"
+CURSOR_API_URL="https://cursor.com/api/download?platform=linux-x64&releaseTrack=stable"
 
 # Function to print usage
 print_usage() {
@@ -118,16 +118,16 @@ cp -r "$EXTRACT_DIR/squashfs-root/"* "$DEB_DIR/opt/cursor/"
 # Create launcher script
 cat > "$DEB_DIR/usr/bin/cursor" << EOF
 #!/bin/bash
-/opt/cursor/AppRun "\$@"
+/opt/cursor/AppRun --no-sandbox "\$@"
 EOF
 chmod +x "$DEB_DIR/usr/bin/cursor"
 
 # Copy icon
 echo "Setting up application icon..."
-if [ -f "$EXTRACT_DIR/co.anysphere.cursor.png" ]; then
-    cp "$EXTRACT_DIR/co.anysphere.cursor.png" "$DEB_DIR/usr/share/icons/hicolor/512x512/apps/cursor.png"
-elif [ -f "$EXTRACT_DIR/code.png" ]; then
-    cp "$EXTRACT_DIR/code.png" "$DEB_DIR/usr/share/icons/hicolor/512x512/apps/cursor.png"
+if [ -f "$EXTRACT_DIR/squashfs-root/code.png" ]; then
+    cp "$EXTRACT_DIR/squashfs-root/code.png" "$DEB_DIR/usr/share/icons/hicolor/512x512/apps/cursor.png"
+elif [ -f "$EXTRACT_DIR/squashfs-root/co.anysphere.cursor.png" ]; then
+    cp "$EXTRACT_DIR/squashfs-root/co.anysphere.cursor.png" "$DEB_DIR/usr/share/icons/hicolor/256x256/apps/cursor.png"
 else
     # Try to find an icon in the squashfs-root directory
     # Using a safer method that avoids broken pipe errors
